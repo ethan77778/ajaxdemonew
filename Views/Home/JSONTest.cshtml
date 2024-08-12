@@ -1,0 +1,129 @@
+﻿
+@{
+    ViewData["Title"] = "JSONTest";
+}
+
+<h1>JSONTest</h1>
+@section Styles
+{
+    <style>
+
+    </style>
+}
+<ul>
+    <li></li>
+</ul>
+
+<ul id="ul1">
+</ul>
+<div id="card">
+</div>
+
+<table id="table1" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>姓名</th>
+            <th>年資</th>
+            <th>薪水</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section Scripts
+{
+
+    <script src="~/js/travel.js"></script>
+    <script>
+
+        var emps = [
+            { "name": "Tom", "workYears": 3, "salary": 35000 },
+            { "name": "Jack", "workYears": 5, "salary": 40000 },
+            { "name": "Mary", "workYears": 7, "salary": 45000 }];
+        var emp = {
+            "employees": [
+                { "name": "Tom", "workYears": 3, "salary": 35000 },
+                { "name": "Jack", "workYears": 5, "salary": 40000 },
+                { "name": "Mary", "workYears": 7, "salary": 45000 }
+            ]
+        };
+        // console.log(emps[0].name);
+
+        // for (let a = 0; a < emps.length; a++)
+        // {
+        //     console.log(emps[a].name)
+        //     console.log(emps[a].workYears)
+        //     console.log(emps[a].salary)
+        // }
+
+        const theU1 = document.querySelector('#ul1')
+        const empTable = document.querySelector('#table1 tbody')
+        const cards = document.querySelector('#card')
+        // emps.forEach(function (a, b, c) {
+        //     console.log(a);
+        //     console.log(b);
+        //     console.log(c);
+        // })
+
+
+        // emps.forEach(emp => {
+        //      // 將資料顯示在網頁上 DOM
+        //     const eleLi=document.createElement('li') //建立li的元素
+
+        //     const txtli=document.createTextNode(emp.name)//創建一個包含文字的文本節點
+
+        //     eleLi.appendChild(txtli)//<li>Jack</li>
+        //     theU1.appendChild(eleLi) //<ul><li>Jack</li></ul>
+        //     //appendchild若想要向添加新的子元素或文本節點，可以使用 appendChild 方法來實現這一目的。
+        // })
+        const datas = emps.map(emp => {
+            //map方法只能用在陣列
+            //解構賦值
+            const { name, workYears, salary } = emp //{"name":"TOM"}
+            return (
+                `
+                    <tr>
+                          <td>${name}</td>
+                          <td>${workYears}</td>
+                          <td>${salary}</td>
+                    </tr>
+                    `
+            )
+        })
+        console.log(datas.join(""));
+        empTable.innerHTML = datas.join(" ");
+        //join是從陣列把資料讀出來 ("")為資料與資料用空字串做連結.
+        //innerHTML在裡面加入HTML
+
+        // const data = emp.employees.map(emp => {
+        //     return(
+        //         `
+        //             <tr>
+        //                   <td>${emp.name}</td>
+        //                   <td>${emp.workYears}</td>
+        //                   <td>${emp.salary}</td>
+        //             </tr>
+        //             `
+        //     )
+        // })
+
+
+        const travel = spots.CommonFormat.Section.map(tra => {
+            if (tra.file.img && tra.file.img.length > 0 && tra.file.img[0].text) {
+                const p = tra.file.img[0].text;
+                return (`<div class="card" style="width: 18rem;">
+                    <img src="${p}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                    <h5 class="card-title">${tra.stitle}</h5>
+                    <p class="card-text">${tra.xbody}</p>
+                    <a href="${tra.xurl}" class="btn btn-primary">Go somewhere</a>
+                  </div>
+                </div>
+                        `
+                )
+            }
+        })
+        cards.innerHTML = travel.join("")
+    </script>
+}
+

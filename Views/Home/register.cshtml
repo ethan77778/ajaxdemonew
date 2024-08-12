@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewData["Title"] = "register";
+}
+
+<h1>register</h1>
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <form id="userForm">
+            <div class="mb-3">
+                <label for="intputName" class="form-label">姓名</label>
+                <input type="text" class="form-control" id="intputName" name="userName">
+            </div>
+            <div class="mb-3">
+                <label for="intputEmail" class="form-label">電子郵件</label>
+                <input type="email" class="form-control" id="intputEmail " name="userEmail">
+            </div>
+            <div class="mb-3">
+                <label for="intputAge" class="form-label">年紀</label>
+                <input type="number" class="form-control" id="intputAge" name="userAge">
+            </div>
+            <div class="mb-3">
+                <label for="formFile" class="form-label">選擇檔案</label>
+                <input class="form-control" type="file" id="formFile" name="userPhoto">
+            </div>
+            <button type="submit" id="button1" class=" btn btn-primary">click</button>
+        </form>
+      
+
+        <div id="div1" class="alert alert-info mt-3"></div>
+    </div>
+    <div class="col-3"></div>
+</div>
+
+
+@* <input id="intputName" type="text" placeholder="請輸入姓名"/>
+<input id="intputEmail" type="email" placeholder="請輸入電子郵件" />
+<input id="intputAge" type="number" placeholder="請輸入年紀" /> *@
+
+
+@section Styles
+{
+ <style>
+
+ </style>
+}
+@section Scripts
+{
+    <script>
+        const btn = document.querySelector('#button1')
+        const div = document.querySelector('#div1')
+        // const Name = document.querySelector('#intputName')
+        // const Email = document.querySelector('#intputEmail')
+        // const Age = document.querySelector('#intputAge')
+        btn.addEventListener('click', async (event) => {
+            event.preventDefault();//防止button按鈕型態變成submit
+
+            // //讀出FormData
+            const formData = new FormData(document.querySelector('#userForm'));
+            // for (const pair of formData.entries()) {
+            //     console.log(`${pair[0]}`);
+            //     console.log(`${pair[1]}`);
+            // }
+
+            const api = `@Url.Content("~/api/Register")`
+            const response = await fetch(api, {
+                method:'Post',
+                body:formData
+            })
+            const data = await response.text()
+            div.innerHTML=data
+           
+            // const api = `@Url.Content("~/api/Register")?userName=${Name.value}&userEmail=${Email.value}&userAge=${Age.value}`
+            // const response=await fetch(api)
+            // const data = await response.text()
+            // div.innerHTML=data
+        })
+    </script>
+}

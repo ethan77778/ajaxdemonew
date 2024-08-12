@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewData["Title"] = "travel";
+}
+
+<h1>travel</h1>
+<div class="row mb-3">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <nav aria-label="...">
+            <ul class="pagination pagination-sm" id="ul1">
+
+            </ul>
+        </nav>
+    </div>
+    <div class="col-3">
+        <input type="search" placeholder="搜尋景點" id="inputSearch" class="form-control" />
+    </div>
+</div>
+<div class="row row-cols-1 row-cols-md-3 g-4" id="div1">
+</div>
+
+</div>
+
+@section Styles
+{
+    <style>
+        li {
+            cursor: pointer
+        }
+    </style>
+}
+@section Scripts
+{
+    <script>
+        const searchdata = {
+            "categoryId": 0,
+            "keyword": "北投",
+            "page": 1,
+            "pageSize": 9,
+            "sortType": "desc",
+            "sortBy": "categoryId"
+        }
+        const divSpots = document.querySelector('#div1')
+        const inputsearch = document.querySelector('#inputSearch')
+        const ulPage = document.querySelector('#ul1')
+        
+        inputsearch.addEventListener('keydown', event => {
+            if (event.which === 13) {
+                searchdata.keyword = inputsearch.value
+                loadSpots()
+            }
+        })
+
+        //載入景點資料
+        const loadSpots = async () => {
+            const api = '@Url.Content("~/api/Spots")'
+            const response = await fetch(api, {
+                method: 'POST',
+                body: JSON.stringify(searchdata),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            const data = await response.json()
+            console.log(data)
+
+
+            //讀取景點資料
+            const spots = data.spotsResult.map(spot => {
+                const { address, spotTitle, spotDescription, spotImage, spotId } = spot
+                return (`
+                                    <div class="col">
+                                                <div class="card h-100">
+                                                    <img src="${spotImage}" class="card-img-top" alt="${spotTitle}">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">${spotTitle}</h5>
+                                                        <p class="card-text">${spotDescription.length <= 100 ? spotDescription : spotDescription.substring(0, 100)}...</p>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                       <small class="text-body-secondary" > ${address} </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                            `)
+            })
+            
+            divSpots.innerHTML = spots.join("")
+
+           
+            //產生分頁按鈕
+            let liPages=""
+            for (let i = 1,max = data.totalPages; i <= max; i++) {
+                liPages += `<li class="page-item" onclick="pagingHandler(${i})"><a class="page-link">${i}</a></li>`
+            }
+            ulPage.innerHTML = liPages;
+        }
+        //分頁
+        const pagingHandler = page => {
+            searchdata.page=page
+            loadSpots()
+        }
+        loadSpots()
+    </script>
+}
